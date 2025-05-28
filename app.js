@@ -7,7 +7,7 @@ app.use(express.json());
  
 app.delete('/posts/:id', (req, res) => {  
   const postId = req.params.id;  
-  const query = 'DELETE FROM posts WHERE id = ?'; // Sostituisci 'posts' con il nome della tua tabella  
+  const query = 'DELETE FROM posts WHERE id = ?'; 
 
   dbConnection.query(query, [postId], (err, results) => {  
     if (err) {  
