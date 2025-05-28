@@ -1,28 +1,22 @@
-const express = require('express');  
-const dbConnection = require('./dbConfig'); 
+const express = require('express');
+const app = express();
+const port = 3000;
+const postsRouter = require('./routers/script');
 
-const app = express();  
-app.use(express.json());  
+//error 500
+const errorsCatcher = require('./middlewares/errorsCatcher');
 
- 
-app.delete('/posts/:id', (req, res) => {  
-  const postId = req.params.id;  
-  const query = 'DELETE FROM posts WHERE id = ?'; 
+const notFound = require('./middlewares/Notfound');
+app.use(express.static('public'));
+app.use(express.json());
+app.use("/script", postsRouter);
+app.use(errorsCatcher);
 
-  dbConnection.query(query, [postId], (err, results) => {  
-    if (err) {  
-      console.error('Errore nella query: ', err);  
-      return res.status(500).json({ error: 'Errore nell\'eliminazione del post' });  
-    }  
-    
-    if (results.affectedRows === 0) {  
-      return res.status(404).json({ error: 'Post non trovato' });  
-    }  
-    
-    res.status(204).send();  
-  });  
-});  
 
+app.use(notFound);
+app.listen (port, () => {
+    console.log('Server attivato sulla porta ' + port);
+});
  
 const PORT = process.env.PORT || 3000;  
 app.listen(PORT, () => {  
